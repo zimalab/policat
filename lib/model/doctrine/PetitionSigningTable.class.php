@@ -25,6 +25,8 @@ class PetitionSigningTable extends Doctrine_Table {
   const SUBSCRIBER = 'subscriber';
   const STATUS = 'status';
   const WIDGET = 'widget';
+  const VERIFIED = 'verified';
+  const SUBSCRIBE = 'subscribe';
   const USER = 'user';
   const SEARCH = 'search';
   const ORDER = 'order';
@@ -51,6 +53,8 @@ class PetitionSigningTable extends Doctrine_Table {
       self::COUNTRY => null,
       self::SUBSCRIBER => false,
       self::STATUS => PetitionSigning::STATUS_COUNTED,
+      self::VERIFIED => 'all',
+      self::SUBSCRIBE => 'all',
       self::WIDGET => null,
       self::USER => null,
       self::SEARCH => '',
@@ -96,6 +100,8 @@ class PetitionSigningTable extends Doctrine_Table {
     $download = $options[self::DOWNLOAD];
     $download_null = $options[self::DOWNLOAD_NULL];
     $mailexport_pending = $options[self::MAILEXPORT_PENDING];
+    $subscribe = $options[self::SUBSCRIBE];
+    $verified = $options[self::VERIFIED];
 
     if ($status) {
       $query->andWhere('ps.status = ?', $status);
@@ -174,7 +180,7 @@ class PetitionSigningTable extends Doctrine_Table {
         $query->andWhere('ps.country = ?', $country);
     }
 
-    $this->andQuerySubscriber($query, $user, $subscriber, 'ps');
+    $this->andQuerySubscriber($query, $user, $subscriber, 'ps', $subscribe, $verified);
 
     if ($search) {
       $search_normalized = PetitionSigningSearchTable::normalize($search);
@@ -224,9 +230,15 @@ class PetitionSigningTable extends Doctrine_Table {
     return $query;
   }
 
-  private function andQuerySubscriber($query, $user = null, $subscriber = true, $alias = 'ps') {
+  private function andQuerySubscriber($query, $user = null, $subscriber = true, $alias = 'ps', $subscribe = PetitionSigning::SUBSCRIBE_YES, $verified = 'all') {
     if ($subscriber) {
-      $query->andWhere("$alias.subscribe = ?", PetitionSigning::SUBSCRIBE_YES);
+      if ($verified !== 'all') {
+        $query->andWhere("$alias.verified = ?", $verified);
+      }
+
+      if ($subscribe !== 'all') {
+        $query->andWhere("$alias.subscribe = ?", $subscribe);
+      }
 
       $widget_ids_sub_query = $query->copy()
         ->orderBy("$alias.widget_id")

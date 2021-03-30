@@ -35,8 +35,21 @@ class PetitionSigning extends BasePetitionSigning {
 
   const SUBSCRIBE_NO = 0;
   const SUBSCRIBE_YES = 1;
+
+  static $SUBSCRIBE_SHOW = array
+  (
+    self::SUBSCRIBE_YES => 'Subscriber',
+    self::SUBSCRIBE_NO  => 'Non-subscriber'
+  );
+
   const VERIFIED_NO = 0;
   const VERIFIED_YES = 1;
+
+  static $VERIFIED_SHOW = array
+  (
+    self::VERIFIED_YES => 'Verified',
+    self::VERIFIED_NO  => 'Unverified'
+  );
 
   const MAILEXPORT_PENDING_NO = 0;
   const MAILEXPORT_PENDING_YES = 1;

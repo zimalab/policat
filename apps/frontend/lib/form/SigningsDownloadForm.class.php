@@ -13,6 +13,7 @@ class SigningsDownloadForm extends policatFilterForm {
   const OPTION_QUERY = 'query';
   const OPTION_SUBSCRIBER = 'subscriber';
   const OPTION_FAST_VALIDATE = 'fast_validate';
+  const OPTION_VERIFIED = 'verified';
 
   public function configure() {
     $query = $this->getOption(self::OPTION_QUERY);
@@ -106,6 +107,38 @@ class SigningsDownloadForm extends policatFilterForm {
       )));
     }
 
+    if ($this->getOption(self::OPTION_VERIFIED)) {
+      $verified_with_all = PetitionSigning::$VERIFIED_SHOW + array('all' => 'All');
+      $this->setWidget('v', new sfWidgetFormChoice(array(
+        'choices' => $verified_with_all,
+        'label' => false
+      ), array(
+        'class' => 'span2'
+      )));
+
+      $this->setValidator('v', new sfValidatorChoice(array(
+        'choices' => array_keys($verified_with_all),
+        'required' => false
+      )));
+
+      $this->setDefault('v', 1);
+
+      $subscribe_with_all = PetitionSigning::$SUBSCRIBE_SHOW + array('all' => 'All');
+      $this->setWidget('su', new sfWidgetFormChoice(array(
+        'choices' => $subscribe_with_all,
+        'label' => false
+      ), array(
+        'class' => 'span2'
+      )));
+
+      $this->setValidator('su', new sfValidatorChoice(array(
+        'choices' => array_keys($subscribe_with_all),
+        'required' => false
+      )));
+
+      $this->setDefault('v', 1);
+    }
+
     $this->setWidget('s', new sfWidgetFormInputText(array(
         'label' => false
       ), array(
@@ -131,6 +164,14 @@ class SigningsDownloadForm extends policatFilterForm {
 
     if ($this->getValue('p')) {
       $options[PetitionSigningTable::PETITION] = $this->getValue('p');
+    }
+
+    if ($this->getOption(self::OPTION_VERIFIED) && $this->getValue('v') !== NULL) {
+      $options[PetitionSigningTable::VERIFIED] = $this->getValue('v');
+    }
+
+    if ($this->getOption(self::OPTION_VERIFIED) && $this->getValue('su') !== NULL) {
+      $options[PetitionSigningTable::SUBSCRIBE] = $this->getValue('su');
     }
 
     return $options;
@@ -175,6 +216,15 @@ class SigningsDownloadForm extends policatFilterForm {
     return PetitionSigningTable::getInstance()
         ->query(array_merge($this->getMergedQueryOptions(), array(PetitionSigningTable::STATUS => PetitionSigning::STATUS_PENDING)))
         ->count();
+  }
+
+  protected function getDefaultValues()
+  {
+    if ($this->getOption(self::OPTION_VERIFIED)) {
+      return array('v' => 1, 'su' => 1);
+    }
+
+    return parent::getDefaultValues();
   }
 
 }

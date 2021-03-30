@@ -462,8 +462,11 @@ $(function ($) {
 	$('.change_onload select.ajax_change').each(wvAjax);
 	$('button.filter_reset').click(function () {
 		var form = $(this).parents('form');
-		$('select', form).val('');
-		$('input', form).val('');
+		$('select[name^="_["]', form).val('');
+		$('input[name^="_["]', form).val('');
+		$('#v', form).val('1');
+		$('#su', form).val('1');
+
 		if ($.fn.chosen != undefined)
 			try {
 				$('select', form).trigger("chosen:updated");

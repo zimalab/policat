@@ -11,6 +11,19 @@ use_helper('Number');
   </form>
 <?php endif ?>
 <div id="data">
+    <?php if ($show_alerts) { ?>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="alert alert-warning<?php if ($form->getValue('v') == 1) { ?> d-none<?php } ?>" role="alert">
+            Attention: this list contains data of people who did not verify their email address. Make sure you have their consent before you use their data.
+          </div>
+
+          <div class="alert alert-warning<?php if ($form->getValue('su') == 1) { ?> d-none<?php } ?>" role="alert">
+            Attention: this list contains signers who did not consent to be kept informed by you. Read and respect your own privacy policy.
+          </div>
+        </div>
+      </div>
+    <?php } ?>
     <div class="row mt-2">
         <?php if (isset($count)): ?><p class="col-md-3"><strong>Count: <span class="label label-success"><?php echo format_number($count) ?></strong></span></p><?php endif ?>
         <?php if (isset($pending)): ?>

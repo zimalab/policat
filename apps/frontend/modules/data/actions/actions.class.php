@@ -237,7 +237,8 @@ class dataActions extends policatActions {
         // filter
         $form = new SigningsDownloadForm(array(), array(
             PetitionSigningTable::PETITION => $petition,
-            SigningsDownloadForm::OPTION_QUERY => PetitionSigningTable::getInstance()->query($base_query_options)
+            SigningsDownloadForm::OPTION_QUERY => PetitionSigningTable::getInstance()->query($base_query_options),
+            SigningsDownloadForm::OPTION_VERIFIED => $subscriptions
         ));
         $form->bind($form_data);
         if ($form->isValid()) {
@@ -292,7 +293,8 @@ class dataActions extends policatActions {
 
         // filter
         $form = new SigningsDownloadForm(array(), array(
-            SigningsDownloadForm::OPTION_QUERY => PetitionSigningTable::getInstance()->query($base_query_options)
+            SigningsDownloadForm::OPTION_QUERY => PetitionSigningTable::getInstance()->query($base_query_options),
+            SigningsDownloadForm::OPTION_VERIFIED => $subscriptions
         ));
         $form->bind($form_data);
         if ($form->isValid()) {

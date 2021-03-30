@@ -65,10 +65,18 @@ abstract class policatFilterForm extends BaseForm {
           ->setAttribute($session_key, $this->isValid() ? $qp[$this->getName()] : null, get_class($this));
       }
     } elseif ($session_key) {
-      $this->bind(sfContext::getInstance()->getUser()->getAttribute($session_key, array(), get_class($this)));
+      $this->bind(sfContext::getInstance()->getUser()->getAttribute($session_key, $this->getDefaultValues(), get_class($this)));
     } else {
-      $this->bind(array());
+      $this->bind($this->getDefaultValues());
     }
+  }
+
+  /**
+   * @return array
+   */
+  protected function getDefaultValues()
+  {
+    return array();
   }
 
 }

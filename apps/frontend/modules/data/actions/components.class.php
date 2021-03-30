@@ -56,6 +56,7 @@ class dataComponents extends policatComponents {
       $this->route = 'data_campaign_pager';
       $this->route_params = array('id' => $this->campaign->getId());
       $this->show_petition = true;
+      $this->show_alerts = false;
       $data_owner_id = $this->campaign->getDataOwnerId();
       $download_route = 'data_campaign_download';
       $download_route_id = $this->campaign->getId();
@@ -75,12 +76,14 @@ class dataComponents extends policatComponents {
           PetitionSigningTable::ORDER => PetitionSigningTable::ORDER_DESC,
           SigningsDownloadForm::OPTION_QUERY => $query->copy(),
           SigningsDownloadForm::OPTION_SUBSCRIBER => $this->subscriptions,
-          SigningsDownloadForm::OPTION_FAST_VALIDATE => $page > 1
+          SigningsDownloadForm::OPTION_FAST_VALIDATE => $page > 1,
+          SigningsDownloadForm::OPTION_VERIFIED => $this->subscriptions
       ));
-      $this->form->bindSelf('p' . $this->petition->getId());
+      $this->form->bindSelf('p' . ($this->subscriptions ? 's' : '') . $this->petition->getId());
 
       $this->route = 'data_petition_pager';
       $this->route_params = array('id' => $this->petition->getId());
+      $this->show_alerts = $this->subscriptions ? true : false;
       $data_owner_id = $this->petition->getCampaign()->getDataOwnerId();
       $download_route = 'data_petition_download';
       $download_route_id = $this->petition->getId();
@@ -97,12 +100,14 @@ class dataComponents extends policatComponents {
           PetitionSigningTable::ORDER => PetitionSigningTable::ORDER_DESC,
           SigningsDownloadForm::OPTION_QUERY => $query->copy(),
           SigningsDownloadForm::OPTION_SUBSCRIBER => $this->subscriptions,
-          SigningsDownloadForm::OPTION_FAST_VALIDATE => $page > 1
+          SigningsDownloadForm::OPTION_FAST_VALIDATE => $page > 1,
+          SigningsDownloadForm::OPTION_VERIFIED => $this->subscriptions
       ));
-      $this->form->bindSelf('w' . $this->widget->getId());
+      $this->form->bindSelf('w' . ($this->subscriptions ? 's' : '') . $this->widget->getId());
 
       $this->route = 'data_widget_pager';
       $this->route_params = array('id' => $this->widget->getId());
+      $this->show_alerts = $this->subscriptions ? true : false;
       $data_owner_id = $this->widget->getCampaign()->getDataOwnerId();
       $download_route = 'data_widget_download';
       $download_route_id = $this->widget->getId();
